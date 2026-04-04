@@ -1,4 +1,4 @@
-package com.tiny.ledger.wallet.domain;
+package com.tiny.ledger.transaction.domain;
 
 public enum TransactionType {
     WITHDRAW,

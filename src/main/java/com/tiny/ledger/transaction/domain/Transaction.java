@@ -1,12 +1,12 @@
-package com.tiny.ledger.wallet.domain;
+package com.tiny.ledger.transaction.domain;
+import com.tiny.ledger.account.dto.AccountResponse;
 
 import java.security.Timestamp;
-import java.util.UUID;
 
 public class Transaction {
 
-    private UUID id;
     private double amount;
     private TransactionType type;
     private Timestamp timestamp;
+    private AccountResponse account;
 }
