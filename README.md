@@ -40,6 +40,15 @@ Feel free to omit other non-essential aspects if needed to keep the solution foc
 
 The solution should be submitted as a link to a public git repository such as GitHub, GitLab, or Bitbucket.
 
+Assumptions:
+
+Account will initialize with balance = 0;
+As mentioned in the requirements, a map will be used to store data.
+The project will use Java with springboot
+The transactions will be associated with the account controller, since the balance is related to an account
+The transactions currency will not be considered to simplify
+The transaction Types will be an enum: WITHDRAWAL & DEPOSIT
+For simplicity and
 The repository must include:
 
 - A README file with setup and run instructions

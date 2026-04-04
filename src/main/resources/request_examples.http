@@ -1,0 +1,14 @@
+POST http://localhost:8080/v1/account
+Content-Type: application/json
+
+{
+  "name": "Philip",
+  "balance": 12.0
+}
+
+###
+@accountId = 1
+GET http://localhost:8080/v1/account/{{accountId}}
+Accept: application/json
+
+
