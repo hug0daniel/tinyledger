@@ -1,4 +1,4 @@
-package com.tiny.ledger.account;
+package com.tiny.ledger.account.domain;
 
 import com.tiny.ledger.shared.Amount;
 

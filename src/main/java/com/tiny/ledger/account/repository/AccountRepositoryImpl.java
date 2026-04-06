@@ -1,6 +1,6 @@
 package com.tiny.ledger.account.repository;
 
-import com.tiny.ledger.account.Account;
+import com.tiny.ledger.account.domain.Account;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;

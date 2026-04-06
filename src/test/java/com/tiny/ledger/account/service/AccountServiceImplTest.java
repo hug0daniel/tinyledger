@@ -1,6 +1,6 @@
 package com.tiny.ledger.account.service;
 
-import com.tiny.ledger.account.Account;
+import com.tiny.ledger.account.domain.Account;
 import com.tiny.ledger.account.dto.AccountCreationRequest;
 import com.tiny.ledger.account.dto.AccountResponse;
 import com.tiny.ledger.account.repository.AccountRepository;
