@@ -1,44 +1,27 @@
 package com.tiny.ledger.shared;
 
-public class Amount {
-    public Double value;
+import com.tiny.ledger.shared.exceptions.InsufficientBalanceException;
+import com.tiny.ledger.shared.exceptions.InvalidAmountException;
 
-
-    public Amount(Double value) {
+public record Amount(Double value) {
+    public Amount {
         validateAmount(value);
-        this.value = value;
     }
 
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public Amount deposit(Amount amount){
-        Double value = this.value + amount.value;
-        return new Amount(value);
+    public Amount deposit(Amount amount) {
+        return new Amount(this.value + amount.value);
     }
 
     public Amount withdraw(Amount amount) {
         if (this.value - amount.value < 0)
-            throw new RuntimeException("You don't have enough baalance for withdraw!");
-
-        Double value = this.value - amount.value;
-
-        return new Amount(value);
+            throw new InsufficientBalanceException();
+        return new Amount(this.value - amount.value);
     }
 
-    private void validateAmount(Double amount){
-        if(amount == null) {
-            throw new RuntimeException("Amount cannot be null");
-        }
-
-        if ((amount < 0)){
-            throw new RuntimeException("Amount must be equal or greater than 0");
-        }
+    private void validateAmount(Double amount) {
+        if (amount == null)
+            throw new InvalidAmountException("Amount cannot be null");
+        if (amount < 0)
+            throw new InvalidAmountException("Amount must be greater than or equal to 0");
     }
-
 }

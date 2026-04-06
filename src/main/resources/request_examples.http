@@ -1,14 +1,36 @@
-POST http://localhost:8080/v1/account
+### Create account
+POST http://localhost:8080/v1/accounts
 Content-Type: application/json
 
 {
   "name": "Philip",
-  "balance": 12.0
+  "balance": 0.0
 }
 
 ###
-@accountId = 1
-GET http://localhost:8080/v1/account/{{accountId}}
+@accountId = 2
+
+### Get account by ID
+GET http://localhost:8080/v1/accounts/{{accountId}}
 Accept: application/json
 
+### Create transaction - Deposit
+POST http://localhost:8080/v1/accounts/{{accountId}}/transactions
+Content-Type: application/json
 
+{
+  "amount": 100.00,
+  "transactionType": "DEPOSIT"
+}
+
+### Create transaction - Withdraw
+POST http://localhost:8080/v1/accounts/{{accountId}}/transactions
+Content-Type: application/json
+
+{
+  "amount": 50.00,
+  "transactionType": "WITHDRAW"
+}
+
+### Get transaction history
+GET http://localhost:8080/v1/accounts/{{accountId}}/transactions
