@@ -5,6 +5,7 @@ import com.tiny.ledger.account.dto.AccountCreationRequest;
 import com.tiny.ledger.account.dto.AccountResponse;
 import com.tiny.ledger.account.repository.AccountRepository;
 import com.tiny.ledger.shared.Amount;
+import com.tiny.ledger.shared.exceptions.AccountNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,46 +27,72 @@ class AccountServiceImplTest {
     @InjectMocks
     private AccountServiceImpl accountService;
 
+    // ─── createAccount ─────────────────────────────────────────────
+
     @Test
-    void createAccount_shouldSaveAccountAndReturnResponse() {
-        AccountCreationRequest request = new AccountCreationRequest("John", 1000.0);
+    void createAccount_shouldSaveAndReturnResponse() {
+        AccountCreationRequest request = new AccountCreationRequest("John", 500.0);
 
-        doNothing().when(accountRepository).saveAccount(any(Account.class));
+        AccountResponse response = accountService.createAccount(request);
 
-        AccountResponse result = accountService.createAccount(request);
-
+        assertNotNull(response);
+        assertEquals("John", response.name());
+        assertEquals(500.0, response.balance());
         verify(accountRepository).saveAccount(any(Account.class));
-        assertEquals("John", result.name());
     }
 
     @Test
-    void getAccountById_nullId_shouldThrowRuntimeException() {
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> accountService.getAccountById(null));
+    void createAccount_shouldThrowException_whenAmountIsNegative() {
+        AccountCreationRequest request = new AccountCreationRequest("John", -100.0);
 
-        assertTrue(exception.getMessage().contains("UserId cannot be null"));
+        assertThrows(RuntimeException.class,
+                () -> accountService.createAccount(request));
+
+        verify(accountRepository, never()).saveAccount(any());
     }
 
     @Test
-    void getAccountById_accountNotFound_shouldThrowIllegalArgumentException() {
-        Long userId = 123L;
-        when(accountRepository.getAccountById(userId)).thenReturn(Optional.empty());
+    void createAccount_shouldThrowException_whenAmountIsNull() {
+        AccountCreationRequest request = new AccountCreationRequest("John", null);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> accountService.getAccountById(userId));
+        assertThrows(RuntimeException.class,
+                () -> accountService.createAccount(request));
 
-        assertTrue(exception.getMessage().contains("There is no such user"));
+        verify(accountRepository, never()).saveAccount(any());
+    }
+
+    // ─── getAccountById ────────────────────────────────────────────
+
+    @Test
+    void getAccountById_shouldReturnResponse_whenAccountExists() {
+        Account account = new Account(1L, new Amount(500.0), "John");
+
+        when(accountRepository.getAccountById(1L)).thenReturn(Optional.of(account));
+
+        AccountResponse response = accountService.getAccountById(1L);
+
+        assertNotNull(response);
+        assertEquals(1L, response.userId());
+        assertEquals("John", response.name());
+        assertEquals(500.0, response.balance());
     }
 
     @Test
-    void getAccountById_accountFound_shouldReturnAccountResponse() {
-        Long userId = 123L;
-        Account account = new Account(userId, new Amount(1000.0), "John");
-        when(accountRepository.getAccountById(userId)).thenReturn(Optional.of(account));
+    void getAccountById_shouldThrowAccountNotFoundException_whenAccountDoesNotExist() {
+        when(accountRepository.getAccountById(1L)).thenReturn(Optional.empty());
 
-        AccountResponse result = accountService.getAccountById(userId);
+        AccountNotFoundException ex = assertThrows(AccountNotFoundException.class,
+                () -> accountService.getAccountById(1L));
 
-        verify(accountRepository).getAccountById(userId);
-        assertEquals(userId, result.id());
-        assertEquals("John", result.name());
-        assertEquals(1000L, result.balance());
+        assertTrue(ex.getMessage().contains("1"));
+    }
+
+    @Test
+    void getAccountById_shouldThrowRuntimeException_whenUserIdIsNull() {
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> accountService.getAccountById(null));
+
+        assertEquals("UserId cannot be null!", ex.getMessage());
+        verify(accountRepository, never()).getAccountById(any());
     }
 }

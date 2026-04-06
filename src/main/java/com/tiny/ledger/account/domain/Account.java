@@ -5,12 +5,12 @@ import com.tiny.ledger.shared.Amount;
 public class Account {
     Long id;
     Amount balance;
-    String Name;
+    String name;
 
     public Account(Long id, Amount balance, String name) {
         this.id = id;
         this.balance = balance;
-        Name = name;
+        this.name = name;
     }
 
     public Long getId() {
@@ -30,14 +30,7 @@ public class Account {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void deposit(Amount amount){
-        this.balance = this.balance.deposit(amount);
-    }
-
-    public void withdraw(Amount amount){
-        this.balance = this.balance.withdraw(amount);
-    }
 }

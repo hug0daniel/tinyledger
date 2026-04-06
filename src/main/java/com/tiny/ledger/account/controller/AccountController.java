@@ -4,10 +4,13 @@ import com.tiny.ledger.account.dto.AccountCreationRequest;
 import com.tiny.ledger.account.dto.AccountResponse;
 import com.tiny.ledger.account.service.AccountService;
 import com.tiny.ledger.transaction.dto.TransactionRequest;
+import com.tiny.ledger.transaction.dto.TransactionResponse;
 import com.tiny.ledger.transaction.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/accounts")
@@ -36,13 +39,13 @@ public class AccountController {
 
     // Endpoint for UserAccount creation
     @PostMapping("/{accountId}/transactions")
-    public ResponseEntity<AccountResponse> postTransaction(@PathVariable Long accountId, @RequestBody TransactionRequest transactionRequest){
+    public ResponseEntity<TransactionResponse> postTransaction(@PathVariable Long accountId, @RequestBody TransactionRequest transactionRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionService.saveTransaction(accountId, transactionRequest));
     }
 
     @GetMapping("/{accountId}/transactions")
-    public ResponseEntity<AccountResponse> getTransactionHistory(@PathVariable Long accountId){
-        return ResponseEntity.status(HttpStatus.CREATED).body(transactionService.getAllTransactions(accountId));
+    public ResponseEntity<List<TransactionResponse>> getTransactionHistory(@PathVariable Long accountId){
+        return ResponseEntity.status(HttpStatus.OK).body(transactionService.getAllTransactions(accountId));
     }
 
 

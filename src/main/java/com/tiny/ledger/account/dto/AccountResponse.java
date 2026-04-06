@@ -1,5 +1,5 @@
 package com.tiny.ledger.account.dto;
 
-public record AccountResponse(Long id,String name, Double balance) {
+public record AccountResponse(Long userId,String name, Double balance) {
 
 }

@@ -5,6 +5,7 @@ import com.tiny.ledger.account.dto.AccountResponse;
 import com.tiny.ledger.account.dto.AccountCreationRequest;
 import com.tiny.ledger.account.repository.AccountRepository;
 import com.tiny.ledger.shared.Amount;
+import com.tiny.ledger.shared.exceptions.AccountNotFoundException;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
@@ -33,20 +34,21 @@ public class AccountServiceImpl implements AccountService {
             throw new RuntimeException("UserId cannot be null!");
         }
         Optional<Account> account = accountRepository.getAccountById(userId);
+
         if (account.isEmpty()){
-            throw new IllegalArgumentException("There is no such user with id: " + userId);
+            throw new AccountNotFoundException(userId);
         }
 
         return new AccountResponse(
                 account.get().getId(),
                 account.get().getName(),
-                account.get().getBalance().getValue()
+                account.get().getBalance().value()
         );
     }
 
 
     private AccountResponse mapAccountToResponse(Account account) {
-        return new AccountResponse(account.getId(), account.getName(), account.getBalance().getValue());
+        return new AccountResponse(account.getId(), account.getName(), account.getBalance().value());
     }
 
     private Account mapToAccount(AccountCreationRequest accountCreationRequest) {
