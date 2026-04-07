@@ -5,6 +5,7 @@ import com.tiny.ledger.shared.Amount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +21,7 @@ class AccountRepositoryImplTest {
 
     @Test
     void saveAccount_shouldAssignIdAndPersist_whenIdIsNull() {
-        Account account = new Account(null, new Amount(500.0), "John");
+        Account account = new Account(null, new Amount(BigDecimal.valueOf(500, 2)), "John");
 
         accountRepository.saveAccount(account);
 
@@ -30,7 +31,7 @@ class AccountRepositoryImplTest {
 
     @Test
     void getAccountById_shouldReturnAccount_whenAccountExists() {
-        Account account = new Account(null, new Amount(500.0), "John");
+        Account account = new Account(null, new Amount(BigDecimal.valueOf(500, 2)), "John");
         accountRepository.saveAccount(account);
 
         Optional<Account> result = accountRepository.getAccountById(account.getId());

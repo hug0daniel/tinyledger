@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +26,8 @@ class TransactionRepositoryImplTest {
 
     @Test
     void saveTransaction_shouldAssignIdAndPersist_whenIdIsNull() {
-        Account account = new Account(1L,new Amount(100.0),"User1");
-        Transaction transaction = new Transaction(null, new Amount(100.0), TransactionType.DEPOSIT, account);
+        Account account = new Account(1L,new Amount(BigDecimal.valueOf(100, 2)),"User1");
+        Transaction transaction = new Transaction(null, new Amount(BigDecimal.valueOf(100, 2)), TransactionType.DEPOSIT, account);
 
         repository.saveTransaction(transaction);
 
@@ -36,12 +37,12 @@ class TransactionRepositoryImplTest {
 
     @Test
     void getAllTransactions_shouldReturnOnlyTransactionsForGivenUser() {
-        Account accountUser1 = new Account(1L,new Amount(100.0),"User1");
-        Account accountUser2 = new Account(2L,new Amount(100.0),"User2");
+        Account accountUser1 = new Account(1L,new Amount(BigDecimal.valueOf(100, 2)),"User1");
+        Account accountUser2 = new Account(2L,new Amount(BigDecimal.valueOf(100, 2)),"User2");
 
-        Transaction t1 = new Transaction(null, new Amount(100.0), TransactionType.DEPOSIT, accountUser1);
-        Transaction t2 = new Transaction(null, new Amount(50.0), TransactionType.WITHDRAW, accountUser1);
-        Transaction t3 = new Transaction(null, new Amount(200.0), TransactionType.DEPOSIT, accountUser2);
+        Transaction t1 = new Transaction(null, new Amount(BigDecimal.valueOf(100, 2)), TransactionType.DEPOSIT, accountUser1);
+        Transaction t2 = new Transaction(null, new Amount(BigDecimal.valueOf(50, 2)), TransactionType.WITHDRAW, accountUser1);
+        Transaction t3 = new Transaction(null, new Amount(BigDecimal.valueOf(200, 2)), TransactionType.DEPOSIT, accountUser2);
 
         repository.saveTransaction(t1);
         repository.saveTransaction(t2);

@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,42 +40,42 @@ class TransactionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        account = new Account(1L, new Amount(500.0), "John");
+        account = new Account(1L, new Amount(BigDecimal.valueOf(500, 2)), "John");
     }
 
     // ─── saveTransaction ───────────────────────────────────────────
 
     @Test
     void saveTransaction_shouldSaveAndReturnResponse_whenDeposit() {
-        TransactionRequest request = new TransactionRequest(100.0, TransactionType.DEPOSIT);
+        TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(100, 2), TransactionType.DEPOSIT);
 
         when(accountRepository.getAccountById(1L)).thenReturn(Optional.of(account));
 
         TransactionResponse response = transactionService.saveTransaction(1L, request);
 
         assertNotNull(response);
-        assertEquals(600.0, account.getBalance().value());
+        assertEquals(BigDecimal.valueOf(600, 2), account.getBalance().value());
         verify(transactionRepository).saveTransaction(any(Transaction.class));
         verify(accountRepository).saveAccount(account);
     }
 
     @Test
     void saveTransaction_shouldSaveAndReturnResponse_whenWithdraw() {
-        TransactionRequest request = new TransactionRequest(100.0, TransactionType.WITHDRAW);
+        TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(100, 2), TransactionType.WITHDRAW);
 
         when(accountRepository.getAccountById(1L)).thenReturn(Optional.of(account));
 
         TransactionResponse response = transactionService.saveTransaction(1L, request);
 
         assertNotNull(response);
-        assertEquals(400.0, account.getBalance().value());
+        assertEquals(BigDecimal.valueOf(400, 2), account.getBalance().value());
         verify(transactionRepository).saveTransaction(any(Transaction.class));
         verify(accountRepository).saveAccount(account);
     }
 
     @Test
     void saveTransaction_shouldThrowException_whenAccountNotFound() {
-        TransactionRequest request = new TransactionRequest(100.0, TransactionType.DEPOSIT);
+        TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(100, 2), TransactionType.DEPOSIT);
 
         when(accountRepository.getAccountById(1L)).thenReturn(Optional.empty());
 
@@ -87,7 +88,7 @@ class TransactionServiceImplTest {
 
     @Test
     void saveTransaction_shouldThrowException_whenInsufficientBalance() {
-        TransactionRequest request = new TransactionRequest(1000.0, TransactionType.WITHDRAW);
+        TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(1000, 2), TransactionType.WITHDRAW);
 
         when(accountRepository.getAccountById(1L)).thenReturn(Optional.of(account));
 
@@ -102,8 +103,8 @@ class TransactionServiceImplTest {
     @Test
     void getAllTransactions_shouldReturnList_whenTransactionsExist() {
         List<Transaction> transactions = List.of(
-                new Transaction(1L, new Amount(100.0), TransactionType.DEPOSIT, account),
-                new Transaction(2L, new Amount(50.0), TransactionType.WITHDRAW, account)
+                new Transaction(1L, new Amount(BigDecimal.valueOf(100, 2)), TransactionType.DEPOSIT, account),
+                new Transaction(2L, new Amount(BigDecimal.valueOf(50, 2)), TransactionType.WITHDRAW, account)
         );
 
         when(transactionRepository.findByAccountId(1L)).thenReturn(transactions);

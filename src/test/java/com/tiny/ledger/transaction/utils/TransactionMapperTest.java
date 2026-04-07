@@ -8,6 +8,8 @@ import com.tiny.ledger.transaction.dto.TransactionRequest;
 import com.tiny.ledger.transaction.dto.TransactionResponse;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -17,13 +19,13 @@ class TransactionMapperTest {
 
     @Test
     void toTransaction_shouldMapRequestToTransaction() {
-        Account account = new Account(1L, new Amount(500.0), "John");
-        TransactionRequest request = new TransactionRequest(100.0, TransactionType.DEPOSIT);
+        Account account = new Account(1L, new Amount(BigDecimal.valueOf(500, 2)), "John");
+        TransactionRequest request = new TransactionRequest(BigDecimal.valueOf(100, 2), TransactionType.DEPOSIT);
 
         Transaction result = TransactionMapper.toTransaction(request, account);
 
         assertNull(result.getId());
-        assertEquals(100.0, result.getAmount().value());
+        assertEquals(BigDecimal.valueOf(100, 2), result.getAmount().value());
         assertEquals(TransactionType.DEPOSIT, result.getType());
         assertEquals(account, result.getAccount());
     }
@@ -32,12 +34,12 @@ class TransactionMapperTest {
 
     @Test
     void toResponse_shouldMapTransactionToResponse() {
-        Transaction transaction = new Transaction(1L, new Amount(100.0), TransactionType.DEPOSIT, new Account(1L, new Amount(500.0), "John"));
+        Transaction transaction = new Transaction(1L, new Amount(BigDecimal.valueOf(100, 2)), TransactionType.DEPOSIT, new Account(1L, new Amount(BigDecimal.valueOf(500, 2)), "John"));
 
         TransactionResponse result = TransactionMapper.toResponse(transaction);
 
         assertEquals(1L, result.transactionId());
-        assertEquals(100.0, result.amount());
+        assertEquals(BigDecimal.valueOf(100, 2), result.amount());
         assertEquals(TransactionType.DEPOSIT, result.type());
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,19 +32,19 @@ class AccountServiceImplTest {
 
     @Test
     void createAccount_shouldSaveAndReturnResponse() {
-        AccountCreationRequest request = new AccountCreationRequest("John", 500.0);
+        AccountCreationRequest request = new AccountCreationRequest("John", BigDecimal.valueOf(500, 2));
 
         AccountResponse response = accountService.createAccount(request);
 
         assertNotNull(response);
         assertEquals("John", response.name());
-        assertEquals(500.0, response.balance());
+        assertEquals(BigDecimal.valueOf(500, 2), response.balance());
         verify(accountRepository).saveAccount(any(Account.class));
     }
 
     @Test
     void createAccount_shouldThrowException_whenAmountIsNegative() {
-        AccountCreationRequest request = new AccountCreationRequest("John", -100.0);
+        AccountCreationRequest request = new AccountCreationRequest("John", BigDecimal.valueOf(-100, 2));
 
         assertThrows(RuntimeException.class,
                 () -> accountService.createAccount(request));
@@ -65,7 +66,7 @@ class AccountServiceImplTest {
 
     @Test
     void getAccountById_shouldReturnResponse_whenAccountExists() {
-        Account account = new Account(1L, new Amount(500.0), "John");
+        Account account = new Account(1L, new Amount(BigDecimal.valueOf(500, 2)), "John");
 
         when(accountRepository.getAccountById(1L)).thenReturn(Optional.of(account));
 
@@ -74,7 +75,7 @@ class AccountServiceImplTest {
         assertNotNull(response);
         assertEquals(1L, response.userId());
         assertEquals("John", response.name());
-        assertEquals(500.0, response.balance());
+        assertEquals(BigDecimal.valueOf(500, 2), response.balance());
     }
 
     @Test
