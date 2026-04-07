@@ -38,18 +38,48 @@ Feel free to omit other non-essential aspects if needed to keep the solution foc
 
 ## Submission
 
-The solution should be submitted as a link to a public git repository such as GitHub, GitLab, or Bitbucket.
+- The solution should be submitted as a link to a public git repository such as GitHub, GitLab, or Bitbucket.
 
-Assumptions:
+--------------------------------------------------------------------
 
-Account will initialize with balance = 0;
-As mentioned in the requirements, a map will be used to store data.
-The project will use Java with springboot
-The transactions will be associated with the account controller, since the balance is related to an account
-The transactions currency will not be considered to simplify
-The transaction Types will be an enum: WITHDRAWAL & DEPOSIT
-For simplicity and
-The repository must include:
 
-- A README file with setup and run instructions
-- A few examples showing how to use the implemented features
+## Assumptions made:
+- Java 21 + Spring Boot
+- Account initializes with balance = 0.00
+- Data stored in memory (no external persistence, per spec)
+- Authentication and authorization won't be implemented
+- This project will use Java and Spring Boot.
+- Balance cannot be negative
+- As currency wasn't specified, transactions won't have currency associated
+- Transaction types will be an ENUM
+- BigDecimal for monetary values (instead of double for financial precision)
+- Transaction types: DEPOSIT / WITHDRAW (enum)
+- Account ID auto-generated (assumes 1, 2, 3...)
+- Response always includes id, name, balance (AccountResponse)
+
+## Setup & Run
+
+### With Maven installed
+```bash
+mvn spring-boot:run
+```
+
+### Without Maven installed
+
+#### Linux / macOS
+```bash
+./mvnw spring-boot:run
+```
+
+#### Windows
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+## Endpoints
+The application has the following endpoints:
+
+- POST /v1/accounts - create an account
+- GET /api/v1/accounts/{id} - get the balance of an account
+- GET /api/v1/accounts/{id}/transactions - get all transactions for an account
+- POST /api/v1/accounts/{id}/transactions - create a transaction for an account
