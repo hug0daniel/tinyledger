@@ -80,6 +80,6 @@ mvn spring-boot:run
 The application has the following endpoints:
 
 - POST /v1/accounts - create an account
-- GET /api/v1/accounts/{id} - get the balance of an account
-- GET /api/v1/accounts/{id}/transactions - get all transactions for an account
-- POST /api/v1/accounts/{id}/transactions - create a transaction for an account
+- GET /v1/accounts/{id} - get the balance of an account
+- GET /v1/accounts/{id}/transactions - get all transactions for an account
+- POST /v1/accounts/{id}/transactions - create a transaction for an account
